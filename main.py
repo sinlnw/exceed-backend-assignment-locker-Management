@@ -116,3 +116,4 @@ def query_item(locker_id: int, user_id: Union[str, None], duration: int, content
     ex = ex.strftime("%Y-%m-%d:%H-%M-%S")
     collection.update_one({"locker_id": locker_id}, {"$set": {"user_id": user_id,"available": False, "start_time": str(start_time), "expected_stop_time": str(ex), "content": content}})
 
+    return{"msg":"locker reserved"}
