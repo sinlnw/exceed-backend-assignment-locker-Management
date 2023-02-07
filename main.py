@@ -10,6 +10,7 @@ DATABASE_NAME = "exceed07"
 COLLECTION_NAME = "locker_man"
 MONGO_DB_URL = f"mongodb://******:*****@mongo.*********.online"   # put your own URL
 MONGO_DB_PORT = 8443
+MONGO_DB_URL = f"mongodb://exceed07:8td6VF6w@mongo.exceed19.online"   # put your own URL
 
 client = MongoClient(f"{MONGO_DB_URL}:{MONGO_DB_PORT}/?authMechanism=DEFAULT")
 
@@ -49,9 +50,10 @@ def find_available_locker():
         if i["available"]:
             available.append(i["locker_id"])
         else:#
-            remaining = (datetime.datetime.now()-datetime.datetime.strptime(i["expected_stop_time"], "%Y-%m-%d:%H-%M-%S")).strftime("%Y-%m-%d:%H-%M-%S")
-            unavailable.append({str(i["locker_id"]):remaining})  
-    return {"available_locker":available}
+            remaining = ((datetime.datetime.strptime(i["expected_stop_time"],"%Y-%m-%d:%H-%M-%S"))-datetime.datetime.now())
+            
+            unavailable.append({str(i["locker_id"]): str(remaining) })  
+    return {"available_locker":available,"unavailable_locker":unavailable}
 
 
     
