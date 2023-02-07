@@ -28,10 +28,28 @@ class locker(BaseModel):
     content : Union[str,None]
 
 
-#@app
+
+def init():
+    for i in range(1, 7):
+        collection.insert_one({
+        "locker_id": i,
+        "user_id": None,
+        "available" : True,
+        "start_time": None,
+        "expected_stop_time": None,
+        "content": None
+    })
+
+@app.get("/find_available_locker")
+def find_available_locker():
+    available = []
+    for i in collection.find({}):
+        i = dict(i)
+        if i["available"]:
+            available.append(i["locker_id"])
+    return {"available_locker":available}
 
 
-#@app
     
 
 
@@ -79,4 +97,22 @@ def query_item(locker_id: int, user_id : Union[str,None], out_time: str, money: 
 
 
 
+
+@app.get("/locker_reserve")
+def query_item(locker_id: int, user_id: Union[str, None], duration: int, content: Union[str, None]):
+    locker = collection.find_one({"locker_id": locker_id})
+    locker = dict(locker)
+    if locker_id not in range(1, 7):
+        raise HTTPException(status_code=400)
+    if duration <= 0:
+        raise HTTPException(status_code=400)
+    if content == "":
+        raise HTTPException(status_code=400)
+    if not locker["available"]:
+        raise HTTPException(status_code=400)
+    start_time = datetime.datetime.now()
+    ex = start_time + datetime.timedelta(minutes=duration)
+    start_time = start_time.strftime("%Y-%m-%d:%H-%M-%S")
+    ex = ex.strftime("%Y-%m-%d:%H-%M-%S")
+    collection.update_one({"locker_id": locker_id}, {"$set": {"user_id": user_id,"available": False, "start_time": str(start_time), "expected_stop_time": str(ex), "content": content}})
 
