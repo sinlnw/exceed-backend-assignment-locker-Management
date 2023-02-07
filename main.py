@@ -43,10 +43,14 @@ def init():
 @app.get("/find_available_locker")
 def find_available_locker():
     available = []
+    unavailable = []
     for i in collection.find({}):
         i = dict(i)
         if i["available"]:
             available.append(i["locker_id"])
+        else:#
+            remaining = (datetime.datetime.now()-datetime.datetime.strptime(i["expected_stop_time"], "%Y-%m-%d:%H-%M-%S")).strftime("%Y-%m-%d:%H-%M-%S")
+            unavailable.append({str(i["locker_id"]):remaining})  
     return {"available_locker":available}
 
 
