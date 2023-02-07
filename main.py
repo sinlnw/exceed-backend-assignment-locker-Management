@@ -15,3 +15,22 @@ db = client[DATABASE_NAME]
 collection = db[COLLECTION_NAME]
 
 app = FastAPI()
+
+class locker(BaseModel):
+    locker_id : int
+    user_id : str
+    available : bool
+    start_time : datetime
+    expected_stop_time : datetime
+    content : str
+
+
+
+
+#@app
+
+
+#@app
+
+
+#@app
