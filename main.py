@@ -54,7 +54,7 @@ def find_available_locker():
 
 
 @app.put("/locker_retrieve")
-def query_item(locker_id: int, user_id : Union[str,None], out_time: str, money: float):
+def locker_retrieve(locker_id: int, user_id : Union[str,None], out_time: str, money: float):
         x = collection.find_one({"user_id": user_id, "locker_id": locker_id, "available": False})
         if x is None:
             raise HTTPException(status_code=400, detail="NOT FOUND")
@@ -80,7 +80,7 @@ def query_item(locker_id: int, user_id : Union[str,None], out_time: str, money: 
 
         if money-price < 0:
             raise HTTPException(status_code=400, detail="TOO LITTLE MONEY")
-        elif money-price > 0:
+        elif money-price >= 0:
             collection.update_one({"locker_id": locker_id}, {"$set": {
                                                             "user_id": None,
                                                             "available" : True,
