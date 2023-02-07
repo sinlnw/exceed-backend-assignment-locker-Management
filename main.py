@@ -8,7 +8,7 @@ import math
 
 DATABASE_NAME = "exceed07"
 COLLECTION_NAME = "locker_man"
-MONGO_DB_URL = f"mongodb://exceed07:8td6VF6w@mongo.exceed19.online"   # mongodb://localhost
+MONGO_DB_URL = f"mongodb://******:*****@mongo.*********.online"   # put your own URL
 MONGO_DB_PORT = 8443
 
 client = MongoClient(f"{MONGO_DB_URL}:{MONGO_DB_PORT}/?authMechanism=DEFAULT")
