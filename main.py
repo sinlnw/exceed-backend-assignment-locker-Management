@@ -2,6 +2,8 @@ from fastapi import FastAPI, HTTPException, Body
 from datetime import date,datetime
 from pymongo import MongoClient
 from pydantic import BaseModel
+from typing import Union
+
 
 DATABASE_NAME = "exceed07"
 COLLECTION_NAME = "locker_man"
@@ -18,11 +20,11 @@ app = FastAPI()
 
 class locker(BaseModel):
     locker_id : int
-    user_id : str
+    user_id : Union[str,None]
     available : bool
     start_time : datetime
     expected_stop_time : datetime
-    content : str
+    content : Union[str,None]
 
 
 
