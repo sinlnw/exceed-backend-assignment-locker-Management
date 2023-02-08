@@ -7,11 +7,9 @@ import math
 
 
 
-=======
 from dotenv import load_dotenv
 import os
 
-=======
 from dotenv import load_dotenv
 import os
 
@@ -24,10 +22,9 @@ COLLECTION_NAME = "locker_man"
 
 
 MONGO_DB_URL = f"mongodb://exceed07:8td6VF6w@mongo.exceed19.online:8443/?authMechanism=DEFAULT"   # put your own URL
-=======
+
 MONGO_DB_URL = f"mongodb://{username}:{password}@mongo.exceed19.online"
 
-=======
 MONGO_DB_URL = f"mongodb://{username}:{password}@mongo.exceed19.online"
 
 MONGO_DB_PORT = 8443
@@ -60,8 +57,8 @@ def init():
         "expected_stop_time": None,
         "content": None
     })
-collection.delete_many({})
-init()
+#collection.delete_many({})
+#init()
 
 @app.get("/find_available_locker")
 def find_available_locker():
