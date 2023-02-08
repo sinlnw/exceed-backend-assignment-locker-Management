@@ -4,23 +4,32 @@ from pymongo import MongoClient
 from pydantic import BaseModel
 from typing import Union
 import math
-<<<<<<< HEAD
-import random
+
+
+
 =======
 from dotenv import load_dotenv
 import os
->>>>>>> c230d538d21dc2ea4be57f33a1488222400416a9
+
+=======
+from dotenv import load_dotenv
+import os
+
 
 load_dotenv(".env")
 username = os.getenv("usernames")
 password = os.getenv('password')
 DATABASE_NAME = "exceed07"
 COLLECTION_NAME = "locker_man"
-<<<<<<< HEAD
+
+
 MONGO_DB_URL = f"mongodb://exceed07:8td6VF6w@mongo.exceed19.online:8443/?authMechanism=DEFAULT"   # put your own URL
 =======
 MONGO_DB_URL = f"mongodb://{username}:{password}@mongo.exceed19.online"
->>>>>>> c230d538d21dc2ea4be57f33a1488222400416a9
+
+=======
+MONGO_DB_URL = f"mongodb://{username}:{password}@mongo.exceed19.online"
+
 MONGO_DB_PORT = 8443
 
 client = MongoClient(f"{MONGO_DB_URL}:{MONGO_DB_PORT}")
