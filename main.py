@@ -4,14 +4,15 @@ from pymongo import MongoClient
 from pydantic import BaseModel
 from typing import Union
 import math
+import random
 
 
 DATABASE_NAME = "exceed07"
 COLLECTION_NAME = "locker_man"
-MONGO_DB_URL = f"mongodb://******:*****@mongo.*********.online"   # put your own URL
+MONGO_DB_URL = f"mongodb://exceed07:8td6VF6w@mongo.exceed19.online:8443/?authMechanism=DEFAULT"   # put your own URL
 MONGO_DB_PORT = 8443
 
-client = MongoClient(f"{MONGO_DB_URL}:{MONGO_DB_PORT}/?authMechanism=DEFAULT")
+client = MongoClient(f"{MONGO_DB_URL}:{MONGO_DB_PORT}")
 
 db = client[DATABASE_NAME]
 
@@ -39,6 +40,8 @@ def init():
         "expected_stop_time": None,
         "content": None
     })
+collection.delete_many({})
+init()
 
 @app.get("/find_available_locker")
 def find_available_locker():
@@ -48,10 +51,10 @@ def find_available_locker():
         i = dict(i)
         if i["available"]:
             available.append(i["locker_id"])
-        else:#
+        else:
             remaining = ((datetime.datetime.strptime(i["expected_stop_time"],"%Y-%m-%d:%H-%M-%S"))-datetime.datetime.now())
             
-            unavailable.append({str(i["locker_id"]): str(remaining) })  
+            unavailable.append({str(i["locker_id"]): str(remaining)})  
     return {"available_locker":available,"unavailable_locker":unavailable}
 
 
@@ -72,16 +75,17 @@ def locker_retrieve(locker_id: int, user_id : Union[str,None], out_time: str, mo
         out = datetime.datetime.strptime(out_time, "%Y-%m-%d:%H-%M-%S")
         end = datetime.datetime.strptime(expected_stop_time, "%Y-%m-%d:%H-%M-%S")
         
-        use_time = out - start
+        #use_time = out - start
         overflow = out - end
+        exp_time = end - start
         price = 0
+        #use_time_2 = datetime.timedelta(seconds=0)
 
-        if overflow >= datetime.timedelta(minutes=0):
+        if exp_time > datetime.timedelta(hours=2):
+            price += 5*(math.ceil((exp_time-datetime.timedelta(hours=2))/datetime.timedelta(hours=1)))
+
+        if overflow > datetime.timedelta(seconds=0):
             price += 20*(math.ceil(overflow/datetime.timedelta(minutes=10)))
-        
-        if use_time > datetime.timedelta(hours=2):
-            use_time -= datetime.timedelta(hours=2)
-            price += 5*(math.ceil(use_time/datetime.timedelta(hours=1)))
 
         if money-price < 0:
             raise HTTPException(status_code=400, detail="TOO LITTLE MONEY")
@@ -119,6 +123,6 @@ def query_item(locker_id: int, user_id: Union[str, None], duration: int, content
     ex = start_time + datetime.timedelta(minutes=duration)
     start_time = start_time.strftime("%Y-%m-%d:%H-%M-%S")
     ex = ex.strftime("%Y-%m-%d:%H-%M-%S")
-    collection.update_one({"locker_id": locker_id}, {"$set": {"user_id": user_id,"available": False, "start_time": str(start_time), "expected_stop_time": str(ex), "content": content}})
+    collection.update_one({"locker_id": locker_id}, {"$set": {"user_id": user_id,"available": False, "start_time": start_time, "expected_stop_time": ex, "content": content}})
 
     return{"msg":"locker reserved"}
